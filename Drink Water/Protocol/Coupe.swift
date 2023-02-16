@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+protocol Coupe {
+    var name: String {get}
+    var type: String {get}
+}

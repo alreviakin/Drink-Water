@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+class NissanSedan: Sedan {
+    var name: String = "Nissan"
+    
+    var type: String = "Sedan"
+    
+    
+}

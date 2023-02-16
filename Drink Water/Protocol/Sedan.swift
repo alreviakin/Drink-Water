@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+protocol Sedan {
+    var name: String {get}
+    var type: String {get}
+    
+}

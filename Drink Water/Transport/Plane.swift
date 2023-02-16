@@ -6,3 +6,17 @@
 //
 
 import Foundation
+
+class Plane: Transport {
+    var name: String = "Plane"
+    
+    var speed: String = "200 kilometers per hour"
+    
+    func start() {
+        print("Plane start")
+    }
+    
+    func stop() {
+        print("Plane stop")
+    }
+}

@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+protocol Transport {
+    var name: String {get}
+    var speed: String {get}
+    
+    func start()
+    func stop()
+}
