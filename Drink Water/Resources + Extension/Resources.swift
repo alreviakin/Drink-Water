@@ -16,9 +16,10 @@ enum Resources {
     
     enum Color {
         static let appGreen = UIColor(red: 39/255, green: 237/255, blue: 130/255, alpha: 1)
+        static let whiteClear = UIColor(white: 1, alpha: 0.8)
     }
     enum Fonts {
         static let drunkWaterFont = UIFont.systemFont(ofSize: 35, weight: .bold)
-        static let needToDringWaterFont = UIFont.systemFont(ofSize: 15)
+        static let needToDringWaterFont = UIFont.systemFont(ofSize: 17)
     }
 }
