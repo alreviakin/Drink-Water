@@ -73,7 +73,7 @@ class DrinkCell: UICollectionViewCell {
     
     func createCell(model: DrinkModel) {
         imageView.image = model.image
-        sizeLabel.text = model.size
+        sizeLabel.text = "\(model.size) ml"
         nameLabel.text = model.name
     }
     

@@ -10,15 +10,15 @@ import SnapKit
 
 class ViewController: UIViewController {
     private let data: [DrinkModel] = [
-        DrinkModel(image: UIImage(named: "coffee")!, name: "Coffee", size: "50"),
-        DrinkModel(image: UIImage(named: "aqua")!, name: "Aqua", size: "50"),
-        DrinkModel(image: UIImage(named: "tea")!, name: "Tea", size: "50"),
-        DrinkModel(image: UIImage(named: "cola")!, name: "Cola", size: "50"),
-        DrinkModel(image: UIImage(named: "energy")!, name: "Energy", size: "50"),
-        DrinkModel(image: UIImage(named: "milkshake")!, name: "Milkshake", size: "50"),
-        DrinkModel(image: UIImage(named: "juice")!, name: "Juice", size: "50"),
-        DrinkModel(image: UIImage(named: "wine")!, name: "Wine", size: "50"),
-        DrinkModel(image: UIImage(named: "milk")!, name: "Milk", size: "50")
+        DrinkModel(image: UIImage(named: "coffee")!, name: "Coffee", size: 50),
+        DrinkModel(image: UIImage(named: "aqua")!, name: "Aqua", size: 100),
+        DrinkModel(image: UIImage(named: "tea")!, name: "Tea", size: 150),
+        DrinkModel(image: UIImage(named: "cola")!, name: "Cola", size: 200),
+        DrinkModel(image: UIImage(named: "energy")!, name: "Energy", size: 200),
+        DrinkModel(image: UIImage(named: "milkshake")!, name: "Milkshake", size: 200),
+        DrinkModel(image: UIImage(named: "juice")!, name: "Juice", size: 200),
+        DrinkModel(image: UIImage(named: "wine")!, name: "Wine", size: 50),
+        DrinkModel(image: UIImage(named: "milk")!, name: "Milk", size: 50)
     ]
     private let backgroundImageView: UIImageView = {
         let imageView = UIImageView()
@@ -34,7 +34,7 @@ class ViewController: UIViewController {
     }()
     private let drunkWaterLabel: UILabel = {
        let label = UILabel()
-        label.text = "4444"
+        label.text = "0"
         label.font = Resources.Fonts.drunkWaterFont
         label.textColor = .white
         label.textAlignment = .right
