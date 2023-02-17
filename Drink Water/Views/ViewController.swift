@@ -9,6 +9,17 @@ import UIKit
 import SnapKit
 
 class ViewController: UIViewController {
+    private let data: [DrinkModel] = [
+        DrinkModel(image: UIImage(named: "coffee")!, name: "Coffee", size: "50"),
+        DrinkModel(image: UIImage(named: "aqua")!, name: "Aqua", size: "50"),
+        DrinkModel(image: UIImage(named: "tea")!, name: "Tea", size: "50"),
+        DrinkModel(image: UIImage(named: "cola")!, name: "Cola", size: "50"),
+        DrinkModel(image: UIImage(named: "energy")!, name: "Energy", size: "50"),
+        DrinkModel(image: UIImage(named: "milkshake")!, name: "Milkshake", size: "50"),
+        DrinkModel(image: UIImage(named: "juice")!, name: "Juice", size: "50"),
+        DrinkModel(image: UIImage(named: "wine")!, name: "Wine", size: "50"),
+        DrinkModel(image: UIImage(named: "milk")!, name: "Milk", size: "50")
+    ]
     private let backgroundImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = Resources.Image.background
@@ -107,7 +118,7 @@ class ViewController: UIViewController {
         collection.backgroundColor = UIColor(white: 1, alpha: 0.5)
         collection.layer.cornerRadius = 10
         collection.clipsToBounds = true
-        collection.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "Cell")
+        collection.register(DrinkCell.self, forCellWithReuseIdentifier: "Cell")
         view.addSubview(collection)
         view.addSubview(collection)
         view.addSubview(statButton)
@@ -116,7 +127,25 @@ class ViewController: UIViewController {
         view.addSubview(addButton)
         addButton.addSubview(addButtonImageView)
     }
+
+
+}
+
+extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 9
+    }
     
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collection.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! DrinkCell
+        cell.createCell(model: data[indexPath.row])
+        return cell
+    }
+    
+    
+}
+
+extension ViewController {
     private func layout() {
         backgroundImageView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -189,20 +218,4 @@ class ViewController: UIViewController {
             make.edges.equalToSuperview().inset(20)
         }
     }
-
-
-}
-
-extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 9
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collection.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath)
-        cell.backgroundColor = Resources.Color.whiteClear
-        return cell
-    }
-    
-    
 }
