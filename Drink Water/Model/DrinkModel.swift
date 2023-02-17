@@ -6,3 +6,10 @@
 //
 
 import Foundation
+import UIKit
+
+struct DrinkModel {
+    var image: UIImage
+    var name: String
+    var size: String
+}
