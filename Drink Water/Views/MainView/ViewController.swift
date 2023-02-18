@@ -9,6 +9,7 @@ import UIKit
 import SnapKit
 
 class ViewController: UIViewController {
+    private var amountOfWater = 0
     private let data: [DrinkModel] = [
         DrinkModel(image: UIImage(named: "coffee")!, name: "Coffee", size: 50),
         DrinkModel(image: UIImage(named: "aqua")!, name: "Aqua", size: 100),
@@ -52,7 +53,6 @@ class ViewController: UIViewController {
         progress.progressTintColor = .white
         progress.backgroundColor = UIColor(white: 1, alpha: 0.1)
         progress.clipsToBounds = true
-        progress.progress = 0.3
         return progress
     }()
     private var widthCell: CGFloat!
@@ -123,6 +123,7 @@ class ViewController: UIViewController {
         view.addSubview(collection)
         view.addSubview(statButton)
         statButton.addSubview(statButtonImageView)
+        statButton.addTarget(self, action: #selector(presentStatView), for: .touchUpInside)
         view.addSubview(notificationButton)
         view.addSubview(addButton)
         addButton.addSubview(addButtonImageView)
@@ -142,7 +143,23 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate {
         return cell
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        amountOfWater += data[indexPath.row].size
+        UIView.animate(withDuration: 0.5) {
+            self.waterProgress.setProgress(Float(self.amountOfWater) / 3500, animated: true)
+        }
+        drunkWaterLabel.moveInTransition(0.4)
+        drunkWaterLabel.text = "\(amountOfWater)"
+    }
     
+}
+
+@objc extension ViewController {
+    private func presentStatView() {
+        let statVC = StatisticView()
+        statVC.modalPresentationStyle = .fullScreen
+        present(statVC, animated: true)
+    }
 }
 
 extension ViewController {
