@@ -10,6 +10,7 @@ import SnapKit
 
 class StatisticView: UIViewController {
     private var offset: CGFloat! = nil
+    private var amount: Int!
     private let backgroundImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = Resources.Image.background
@@ -21,6 +22,12 @@ class StatisticView: UIViewController {
         label.text = "Drink Report"
         label.textColor = Resources.Color.whiteClear
         return label
+    }()
+    private let backButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
+        button.tintColor = .white
+        return button
     }()
     private var menuItems: [UIAction] = []
     private var menu = UIMenu()
@@ -48,7 +55,7 @@ class StatisticView: UIViewController {
         label.font = UIFont.systemFont(ofSize: 50)
         return label
     }()
-    private let percent: Float = 100
+    private var percent: Float = 100
     private let labelNameStackView: UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal
@@ -63,6 +70,7 @@ class StatisticView: UIViewController {
         stack.distribution = .fillEqually
         return stack
     }()
+    private let chart = ChartView(frame: CGRect())
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,6 +82,8 @@ class StatisticView: UIViewController {
     private func initialize() {
         view.addSubview(backgroundImageView)
         view.addSubview(titleLabel)
+        backButton.addTarget(self, action: #selector(back), for: .touchUpInside)
+        view.addSubview(backButton)
         menuItems = [
             UIAction(title: "Today", handler: { action in
                 self.dayButton.setTitle("Today", for: .normal)
@@ -97,12 +107,13 @@ class StatisticView: UIViewController {
         dayButton.showsMenuAsPrimaryAction = true
         view.addSubview(dayButton)
         view.addSubview(transparentView)
-        progress.drawProgress(with: CGFloat(0.7), width: view.bounds.width - offset * 2)
+        progress.drawProgress(with: CGFloat(percent), width: view.bounds.width - offset * 2)
         transparentView.addSubview(progress)
-        percentLabel.text = "\(percent.rounded())%"
+        percentLabel.text = "\((percent * 100).rounded() <= 100 ? (percent * 100).rounded() : 100)%"
         progress.addSubview(percentLabel)
         addStack(stack: labelNameStackView, arr: [createNameLabel(with: "Remainig"), createNameLabel(with: "Target")])
-        addStack(stack: labelNumberStackView, arr: [createNumberLabel(with: 1100), createNumberLabel(with: 3500)])
+        addStack(stack: labelNumberStackView, arr: [createNumberLabel(with: (3500 - amount >= 0 ? 3500 - amount : 0)), createNumberLabel(with: 3500)])
+        view.addSubview(chart)
     }
     
     private func addStack(stack: UIStackView, arr: [UILabel]) {
@@ -125,6 +136,12 @@ extension StatisticView {
             make.left.equalToSuperview().offset(view.bounds.width * 0.1)
             make.top.equalToSuperview().offset(view.bounds.width * 0.15)
             make.height.equalTo(30)
+        }
+        backButton.snp.makeConstraints { make in
+            make.left.equalToSuperview()
+            make.right.equalTo(titleLabel.snp.left)
+            make.height.equalTo(titleLabel.snp.height)
+            make.centerY.equalTo(titleLabel.snp.centerY)
         }
         dayButtonLayout()
         transparentView.snp.makeConstraints { make in
@@ -150,6 +167,12 @@ extension StatisticView {
             make.top.equalTo(labelNameStackView.snp.bottom).offset(10)
             make.height.equalTo(20)
         }
+        chart.snp.makeConstraints { make in
+            make.left.equalToSuperview()
+            make.right.equalToSuperview()
+            make.top.equalTo(transparentView.snp.bottom).offset(10)
+            make.bottom.equalToSuperview()
+        }
     }
 }
 
@@ -170,6 +193,13 @@ extension StatisticView {
 }
 
 extension StatisticView {
+    func configView(amountOfWater: Int) {
+        percent = Float(amountOfWater) / 3500
+        amount = amountOfWater
+    }
+}
+
+extension StatisticView {
     private func createNameLabel(with text: String) -> UILabel {
         let label = UILabel()
         label.text = text
@@ -186,5 +216,11 @@ extension StatisticView {
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         return label
+    }
+}
+
+@objc extension StatisticView {
+    private func back() {
+        dismiss(animated: true)
     }
 }

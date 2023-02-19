@@ -17,6 +17,13 @@
 		AEE58EF9299D2E4E00533109 /* Drink_WaterUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE58EF8299D2E4E00533109 /* Drink_WaterUITestsLaunchTests.swift */; };
 		AEE58F2B299E940800533109 /* Resources.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE58F2A299E940800533109 /* Resources.swift */; };
 		AEE58F2F299E956700533109 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = AEE58F2E299E956700533109 /* SnapKit */; };
+		AEE58F35299F930E00533109 /* DrinkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE58F34299F930E00533109 /* DrinkModel.swift */; };
+		AEE58F37299F948700533109 /* DrinkCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE58F36299F948700533109 /* DrinkCell.swift */; };
+		AEE58F39299FBE2D00533109 /* UIView + Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE58F38299FBE2D00533109 /* UIView + Ext.swift */; };
+		AEE58F3D29A0D71700533109 /* StatisticView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE58F3C29A0D71700533109 /* StatisticView.swift */; };
+		AEE58F4129A22B1700533109 /* ProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE58F4029A22B1700533109 /* ProgressView.swift */; };
+		AEE58F4329A26A8F00533109 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE58F4229A26A8F00533109 /* ChartView.swift */; };
+		AEE58F4929A2773A00533109 /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = AEE58F4829A2773A00533109 /* Charts */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +57,12 @@
 		AEE58EF6299D2E4E00533109 /* Drink_WaterUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Drink_WaterUITests.swift; sourceTree = "<group>"; };
 		AEE58EF8299D2E4E00533109 /* Drink_WaterUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Drink_WaterUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		AEE58F2A299E940800533109 /* Resources.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Resources.swift; sourceTree = "<group>"; };
+		AEE58F34299F930E00533109 /* DrinkModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrinkModel.swift; sourceTree = "<group>"; };
+		AEE58F36299F948700533109 /* DrinkCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrinkCell.swift; sourceTree = "<group>"; };
+		AEE58F38299FBE2D00533109 /* UIView + Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView + Ext.swift"; sourceTree = "<group>"; };
+		AEE58F3C29A0D71700533109 /* StatisticView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticView.swift; sourceTree = "<group>"; };
+		AEE58F4029A22B1700533109 /* ProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
+		AEE58F4229A26A8F00533109 /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +71,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AEE58F2F299E956700533109 /* SnapKit in Frameworks */,
+				AEE58F4929A2773A00533109 /* Charts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -101,9 +115,10 @@
 		AEE58ED4299D2E4D00533109 /* Drink Water */ = {
 			isa = PBXGroup;
 			children = (
+				AEE58F33299F92EB00533109 /* Model */,
 				AEE58F2C299E944100533109 /* Views */,
 				AEE58F05299D2E5800533109 /* Application */,
-				AEE58F06299D2E6300533109 /* Resources */,
+				AEE58F06299D2E6300533109 /* Resources + Extension */,
 			);
 			path = "Drink Water";
 			sourceTree = "<group>";
@@ -134,23 +149,68 @@
 			path = Application;
 			sourceTree = "<group>";
 		};
-		AEE58F06299D2E6300533109 /* Resources */ = {
+		AEE58F06299D2E6300533109 /* Resources + Extension */ = {
 			isa = PBXGroup;
 			children = (
+				AEE58F30299F740200533109 /* Extension */,
 				AEE58EDE299D2E4E00533109 /* Assets.xcassets */,
 				AEE58EE0299D2E4E00533109 /* LaunchScreen.storyboard */,
 				AEE58EE3299D2E4E00533109 /* Info.plist */,
 				AEE58F2A299E940800533109 /* Resources.swift */,
 			);
-			path = Resources;
+			path = "Resources + Extension";
 			sourceTree = "<group>";
 		};
 		AEE58F2C299E944100533109 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				AEE58ED9299D2E4D00533109 /* ViewController.swift */,
+				AEE58F3B29A0D6F600533109 /* StatisticView */,
+				AEE58F3A29A0D6E700533109 /* DrinksView */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		AEE58F30299F740200533109 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				AEE58F38299FBE2D00533109 /* UIView + Ext.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		AEE58F33299F92EB00533109 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				AEE58F34299F930E00533109 /* DrinkModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		AEE58F3A29A0D6E700533109 /* DrinksView */ = {
+			isa = PBXGroup;
+			children = (
+				AEE58ED9299D2E4D00533109 /* ViewController.swift */,
+				AEE58F36299F948700533109 /* DrinkCell.swift */,
+			);
+			path = DrinksView;
+			sourceTree = "<group>";
+		};
+		AEE58F3B29A0D6F600533109 /* StatisticView */ = {
+			isa = PBXGroup;
+			children = (
+				AEE58F3C29A0D71700533109 /* StatisticView.swift */,
+				AEE58F4029A22B1700533109 /* ProgressView.swift */,
+				AEE58F4A29A27AB300533109 /* Chart */,
+			);
+			path = StatisticView;
+			sourceTree = "<group>";
+		};
+		AEE58F4A29A27AB300533109 /* Chart */ = {
+			isa = PBXGroup;
+			children = (
+				AEE58F4229A26A8F00533109 /* ChartView.swift */,
+			);
+			path = Chart;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -171,6 +231,7 @@
 			name = "Drink Water";
 			packageProductDependencies = (
 				AEE58F2E299E956700533109 /* SnapKit */,
+				AEE58F4829A2773A00533109 /* Charts */,
 			);
 			productName = "Drink Water";
 			productReference = AEE58ED2299D2E4D00533109 /* Drink Water.app */;
@@ -246,6 +307,7 @@
 			mainGroup = AEE58EC9299D2E4D00533109;
 			packageReferences = (
 				AEE58F2D299E956700533109 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				AEE58F4729A2773A00533109 /* XCRemoteSwiftPackageReference "Charts" */,
 			);
 			productRefGroup = AEE58ED3299D2E4D00533109 /* Products */;
 			projectDirPath = "";
@@ -290,8 +352,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				AEE58EDA299D2E4D00533109 /* ViewController.swift in Sources */,
+				AEE58F3D29A0D71700533109 /* StatisticView.swift in Sources */,
+				AEE58F39299FBE2D00533109 /* UIView + Ext.swift in Sources */,
+				AEE58F4329A26A8F00533109 /* ChartView.swift in Sources */,
 				AEE58F2B299E940800533109 /* Resources.swift in Sources */,
 				AEE58ED6299D2E4D00533109 /* AppDelegate.swift in Sources */,
+				AEE58F35299F930E00533109 /* DrinkModel.swift in Sources */,
+				AEE58F37299F948700533109 /* DrinkCell.swift in Sources */,
+				AEE58F4129A22B1700533109 /* ProgressView.swift in Sources */,
 				AEE58ED8299D2E4D00533109 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -463,7 +531,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = T7653YUNND;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Drink Water/Resources/Info.plist";
+				INFOPLIST_FILE = "Drink Water/Resources + Extension/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -493,7 +561,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = T7653YUNND;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Drink Water/Resources/Info.plist";
+				INFOPLIST_FILE = "Drink Water/Resources + Extension/Info.plist";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -640,6 +708,14 @@
 				minimumVersion = 5.0.0;
 			};
 		};
+		AEE58F4729A2773A00533109 /* XCRemoteSwiftPackageReference "Charts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/danielgindi/Charts";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -647,6 +723,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AEE58F2D299E956700533109 /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
+		};
+		AEE58F4829A2773A00533109 /* Charts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AEE58F4729A2773A00533109 /* XCRemoteSwiftPackageReference "Charts" */;
+			productName = Charts;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

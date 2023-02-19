@@ -159,6 +159,7 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     private func presentStatView() {
         let statVC = StatisticView()
         statVC.modalPresentationStyle = .fullScreen
+        statVC.configView(amountOfWater: amountOfWater)
         present(statVC, animated: true)
     }
 }
