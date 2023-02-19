@@ -177,7 +177,7 @@ extension ViewController {
         
         drunkWaterLabel.snp.makeConstraints { make in
             make.left.equalTo(titleLabel.snp.left)
-            make.top.equalTo(titleLabel.snp.bottom)
+            make.top.equalTo(titleLabel.snp.bottom).offset(10)
             make.height.equalTo(40)
             make.width.equalTo(view.bounds.width * 0.25)
         }
