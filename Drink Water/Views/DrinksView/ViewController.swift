@@ -8,9 +8,15 @@
 import UIKit
 import SnapKit
 
+enum KeyUserDefaults: String {
+    case drinksData
+}
+
 class ViewController: UIViewController {
     private var amountOfWater = 0
-    private let data: [DrinkModel] = [
+    private var drinksData: [String: Int] = [:]
+    private let defaultUser = UserDefaults.standard
+    private let cellsData: [DrinkModel] = [
         DrinkModel(image: UIImage(named: "coffee")!, name: "Coffee", size: 50),
         DrinkModel(image: UIImage(named: "aqua")!, name: "Aqua", size: 100),
         DrinkModel(image: UIImage(named: "tea")!, name: "Tea", size: 150),
@@ -34,7 +40,7 @@ class ViewController: UIViewController {
         return label
     }()
     private let drunkWaterLabel: UILabel = {
-       let label = UILabel()
+        let label = UILabel()
         label.text = "0"
         label.font = Resources.Fonts.drunkWaterFont
         label.textColor = .white
@@ -49,7 +55,7 @@ class ViewController: UIViewController {
         return label
     }()
     private let waterProgress: UIProgressView = {
-       let progress = UIProgressView()
+        let progress = UIProgressView()
         progress.progressTintColor = .white
         progress.backgroundColor = UIColor(white: 1, alpha: 0.1)
         progress.clipsToBounds = true
@@ -87,15 +93,26 @@ class ViewController: UIViewController {
         return button
     }()
     private let addButtonImageView: UIImageView = {
-       let imageView = UIImageView()
+        let imageView = UIImageView()
         imageView.image = UIImage(systemName: "plus")
         imageView.tintColor = .white
         return imageView
     }()
-
-
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        let nowDate = getCurrunDate(with: "yyyy:MM:dd")
+        if let drinksData = defaultUser.object(forKey: KeyUserDefaults.drinksData.rawValue) as? [String : Int] {
+            self.drinksData = drinksData
+        }
+        if !drinksData.isEmpty {
+            for date in drinksData.keys {
+                if date.hasPrefix(nowDate) {
+                    amountOfWater += drinksData[date]!
+                }
+            }
+        }
         initialize()
         layout()
     }
@@ -103,9 +120,11 @@ class ViewController: UIViewController {
     private func initialize() {
         view.addSubview(backgroundImageView)
         view.addSubview(titleLabel)
+        drunkWaterLabel.text = "\(amountOfWater)"
         view.addSubview(drunkWaterLabel)
         view.addSubview(needToDrinkWaterLabel)
         view.addSubview(waterProgress)
+        waterProgress.progress = Float(amountOfWater) / 3500
         
         let layout = UICollectionViewFlowLayout()
         widthCell = (view.bounds.width * 0.8  - 3) / 3
@@ -129,8 +148,17 @@ class ViewController: UIViewController {
         view.addSubview(addButton)
         addButton.addSubview(addButtonImageView)
     }
+    
+    
+}
 
-
+extension ViewController {
+    private func getCurrunDate(with format: String) -> String {
+        let date = Date()
+        let dateFormater = DateFormatter()
+        dateFormater.dateFormat = format
+        return dateFormater.string(from: date)
+    }
 }
 
 extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate {
@@ -140,17 +168,28 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collection.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! DrinkCell
-        cell.createCell(model: data[indexPath.row])
+        cell.createCell(model: cellsData[indexPath.row])
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        amountOfWater += data[indexPath.row].size
+        amountOfWater += cellsData[indexPath.row].size
         UIView.animate(withDuration: 0.5) {
             self.waterProgress.setProgress(Float(self.amountOfWater) / 3500, animated: true)
         }
         drunkWaterLabel.moveInTransition(0.4)
         drunkWaterLabel.text = "\(amountOfWater)"
+        let date = Date()
+        let dateFormater = DateFormatter()
+        
+        dateFormater.dateFormat = "yyyy:MM:dd HH:mm"
+        let currentDate = getCurrunDate(with: "yyyy:MM:dd HH:mm")
+        if (drinksData[currentDate] != nil) {
+            drinksData[currentDate]! += cellsData[indexPath.row].size
+        } else {
+            drinksData[currentDate] = cellsData[indexPath.row].size
+        }
+        defaultUser.set(drinksData, forKey: KeyUserDefaults.drinksData.rawValue)
     }
     
 }
