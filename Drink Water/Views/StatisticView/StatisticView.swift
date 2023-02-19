@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 
 class StatisticView: UIViewController {
-    
+    private var offset: CGFloat! = nil
     private let backgroundImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = Resources.Image.background
@@ -33,11 +33,21 @@ class StatisticView: UIViewController {
         buton.titleLabel?.textAlignment = .left
         return buton
     }()
+    private let transparentView: UIView = {
+       let view = UIView()
+        view.backgroundColor = UIColor(white: 1, alpha: 0.5)
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 10
+        return view
+    }()
+    private let progress = ProgressView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        offset = (view.bounds.width * 0.1).rounded()
         initialize()
         layout()
+        
     }
     
     private func initialize() {
@@ -65,7 +75,10 @@ class StatisticView: UIViewController {
         dayButton.menu = menu
         dayButton.showsMenuAsPrimaryAction = true
         view.addSubview(dayButton)
-
+        view.addSubview(transparentView)
+        progress.drawProgress(with: CGFloat(0.7), width: view.bounds.width - offset * 2)
+//        progress.backgroundColor = .red
+        transparentView.addSubview(progress)
     }
     
 }
@@ -83,6 +96,16 @@ extension StatisticView {
             make.height.equalTo(30)
         }
         dayButtonLayout()
+        transparentView.snp.makeConstraints { make in
+            make.left.equalToSuperview().offset(offset)
+            make.right.equalToSuperview().offset(-offset)
+            make.top.equalTo(dayButton.snp.bottom).offset(offset)
+            make.height.equalTo(view.bounds.height * 0.45)
+        }
+        progress.snp.makeConstraints { make in
+            make.centerX.top.equalToSuperview()
+            make.width.height.equalTo(transparentView.snp.width)
+        }
     }
 }
 
