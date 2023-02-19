@@ -34,20 +34,41 @@ class StatisticView: UIViewController {
         return buton
     }()
     private let transparentView: UIView = {
-       let view = UIView()
-        view.backgroundColor = UIColor(white: 1, alpha: 0.5)
+        let view = UIView()
+        view.backgroundColor = UIColor(white: 1, alpha: 0.96)
         view.clipsToBounds = true
         view.layer.cornerRadius = 10
         return view
     }()
     private let progress = ProgressView()
+    private let percentLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = Resources.Color.appGreen
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 50)
+        return label
+    }()
+    private let percent: Float = 100
+    private let labelNameStackView: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.alignment = .center
+        stack.distribution = .fillEqually
+        return stack
+    }()
+    private let labelNumberStackView: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.alignment = .center
+        stack.distribution = .fillEqually
+        return stack
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         offset = (view.bounds.width * 0.1).rounded()
         initialize()
         layout()
-        
     }
     
     private func initialize() {
@@ -77,8 +98,18 @@ class StatisticView: UIViewController {
         view.addSubview(dayButton)
         view.addSubview(transparentView)
         progress.drawProgress(with: CGFloat(0.7), width: view.bounds.width - offset * 2)
-//        progress.backgroundColor = .red
         transparentView.addSubview(progress)
+        percentLabel.text = "\(percent.rounded())%"
+        progress.addSubview(percentLabel)
+        addStack(stack: labelNameStackView, arr: [createNameLabel(with: "Remainig"), createNameLabel(with: "Target")])
+        addStack(stack: labelNumberStackView, arr: [createNumberLabel(with: 1100), createNumberLabel(with: 3500)])
+    }
+    
+    private func addStack(stack: UIStackView, arr: [UILabel]) {
+        for i in arr {
+            stack.addArrangedSubview(i)
+        }
+        transparentView.addSubview(stack)
     }
     
 }
@@ -106,6 +137,19 @@ extension StatisticView {
             make.centerX.top.equalToSuperview()
             make.width.height.equalTo(transparentView.snp.width)
         }
+        percentLabel.snp.makeConstraints { make in
+            make.centerX.centerY.equalToSuperview()
+        }
+        labelNameStackView.snp.makeConstraints { make in
+            make.left.right.equalToSuperview()
+            make.top.equalTo(progress.snp.bottom)
+            make.height.equalTo(15)
+        }
+        labelNumberStackView.snp.makeConstraints { make in
+            make.left.right.equalToSuperview()
+            make.top.equalTo(labelNameStackView.snp.bottom).offset(10)
+            make.height.equalTo(20)
+        }
     }
 }
 
@@ -122,5 +166,25 @@ extension StatisticView {
         dayButton.titleLabel?.snp.makeConstraints({ make in
             make.left.equalTo(dayButton.imageView!.snp.right)
         })
+    }
+}
+
+extension StatisticView {
+    private func createNameLabel(with text: String) -> UILabel {
+        let label = UILabel()
+        label.text = text
+        label.textColor = .gray
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 15)
+        return label
+    }
+    
+    private func createNumberLabel(with num: Int) -> UILabel {
+        let label = UILabel()
+        label.text = "\(num) ml"
+        label.textColor = .black
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        return label
     }
 }

@@ -30,7 +30,7 @@ final class ProgressView: UIView {
         
         circleLayer.lineWidth = 40
         circleLayer.strokeEnd = 1
-        circleLayer.fillColor = UIColor.clear.cgColor
+        circleLayer.fillColor = UIColor.white.cgColor
         circleLayer.lineCap = .round
         
         //MARK: - bars
