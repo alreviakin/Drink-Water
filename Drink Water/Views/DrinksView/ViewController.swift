@@ -106,6 +106,7 @@ class ViewController: UIViewController {
         view.addSubview(drunkWaterLabel)
         view.addSubview(needToDrinkWaterLabel)
         view.addSubview(waterProgress)
+        
         let layout = UICollectionViewFlowLayout()
         widthCell = (view.bounds.width * 0.8  - 3) / 3
         heightCell = view.bounds.height / 6
@@ -120,7 +121,7 @@ class ViewController: UIViewController {
         collection.clipsToBounds = true
         collection.register(DrinkCell.self, forCellWithReuseIdentifier: "Cell")
         view.addSubview(collection)
-        view.addSubview(collection)
+        
         view.addSubview(statButton)
         statButton.addSubview(statButtonImageView)
         statButton.addTarget(self, action: #selector(presentStatView), for: .touchUpInside)
