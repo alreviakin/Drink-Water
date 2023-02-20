@@ -7,10 +7,21 @@
 
 import UIKit
 import SnapKit
+import Charts
+
+enum DayInterval: String {
+    case Today
+    case Yesterday
+    case Week
+    case Month
+}
 
 class StatisticView: UIViewController {
+    private var drinksData: [String: Int] = [:]
+    private var currentViewDrinkData: [String: Int] = [:]
     private var offset: CGFloat! = nil
-    private var amount: Int!
+    private var amount = 0
+    private var target: Float = 0
     private let backgroundImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = Resources.Image.background
@@ -70,36 +81,47 @@ class StatisticView: UIViewController {
         stack.distribution = .fillEqually
         return stack
     }()
-    private let chart = ChartView(frame: CGRect())
+    private var chart = ChartView(frame: CGRect())
     
     override func viewDidLoad() {
         super.viewDidLoad()
         offset = (view.bounds.width * 0.1).rounded()
-        initialize()
+        initialize(titleDayButton: "Today", chartEntries: getChartEntries(interval: .Today))
         layout()
     }
     
-    private func initialize() {
+    private func initialize(titleDayButton: String, chartEntries: [ChartDataEntry]) {
+        for subview in view.subviews as [UIView]   {
+          subview.removeFromSuperview()
+        }
+        for view in labelNameStackView.subviews {
+            view.removeFromSuperview()
+        }
+        for view in labelNumberStackView.subviews {
+            view.removeFromSuperview()
+        }
+        dayButton.setTitle(titleDayButton, for: .normal)
+        
         view.addSubview(backgroundImageView)
         view.addSubview(titleLabel)
         backButton.addTarget(self, action: #selector(back), for: .touchUpInside)
         view.addSubview(backButton)
         menuItems = [
-            UIAction(title: "Today", handler: { action in
-                self.dayButton.setTitle("Today", for: .normal)
-                self.dayButtonLayout()
+            UIAction(title: "Today", handler: { [self] action in
+                initialize(titleDayButton: "Today", chartEntries: self.getChartEntries(interval: .Today))
+                layout()
             }),
-            UIAction(title: "Yesterday", handler: { action in
-                self.dayButton.setTitle("Yesterday", for: .normal)
-                self.dayButtonLayout()
+            UIAction(title: "Yesterday", handler: { [self] action in
+                initialize(titleDayButton: "Yesterday", chartEntries: self.getChartEntries(interval: .Yesterday))
+                layout()
             }),
-            UIAction(title: "Week", handler: { action in
-                self.dayButton.setTitle("Week", for: .normal)
-                self.dayButtonLayout()
+            UIAction(title: "Week", handler: {[self] action in
+                initialize(titleDayButton: "Week", chartEntries: self.getChartEntries(interval: .Week))
+                layout()
             }),
-            UIAction(title: "Month", handler: { action in
-                self.dayButton.setTitle("Month", for: .normal)
-                self.dayButtonLayout()
+            UIAction(title: "Month", handler: { [self] action in
+                initialize(titleDayButton: "Month", chartEntries: self.getChartEntries(interval: .Month))
+                layout()
             })
         ]
         menu = UIMenu(children: menuItems)
@@ -112,7 +134,8 @@ class StatisticView: UIViewController {
         percentLabel.text = "\((percent * 100).rounded() <= 100 ? (percent * 100).rounded() : 100)%"
         progress.addSubview(percentLabel)
         addStack(stack: labelNameStackView, arr: [createNameLabel(with: "Remainig"), createNameLabel(with: "Target")])
-        addStack(stack: labelNumberStackView, arr: [createNumberLabel(with: (3500 - amount >= 0 ? 3500 - amount : 0)), createNumberLabel(with: 3500)])
+        addStack(stack: labelNumberStackView, arr: [createNumberLabel(with: (Int(target) - amount >= 0 ? Int(target) - amount : 0)), createNumberLabel(with: Int(target))])
+        chart.configureLineChartLize(lineChartEntries: chartEntries)
         view.addSubview(chart)
     }
     
@@ -127,75 +150,77 @@ class StatisticView: UIViewController {
 
 extension StatisticView {
     private func layout() {
-        backgroundImageView.snp.makeConstraints { make in
+        backgroundImageView.snp.remakeConstraints { make in
             make.edges.equalToSuperview()
         }
         
-        titleLabel.snp.makeConstraints { make in
+        titleLabel.snp.remakeConstraints { make in
             make.right.equalToSuperview()
             make.left.equalToSuperview().offset(view.bounds.width * 0.1)
             make.top.equalToSuperview().offset(view.bounds.width * 0.15)
             make.height.equalTo(30)
         }
-        backButton.snp.makeConstraints { make in
+        backButton.snp.remakeConstraints { make in
             make.left.equalToSuperview()
             make.right.equalTo(titleLabel.snp.left)
             make.height.equalTo(titleLabel.snp.height)
             make.centerY.equalTo(titleLabel.snp.centerY)
         }
         dayButtonLayout()
-        transparentView.snp.makeConstraints { make in
+        transparentView.snp.remakeConstraints { make in
             make.left.equalToSuperview().offset(offset)
             make.right.equalToSuperview().offset(-offset)
             make.top.equalTo(dayButton.snp.bottom).offset(offset)
             make.height.equalTo(view.bounds.height * 0.45)
         }
-        progress.snp.makeConstraints { make in
+        progress.snp.remakeConstraints { make in
             make.centerX.top.equalToSuperview()
             make.width.height.equalTo(transparentView.snp.width)
         }
-        percentLabel.snp.makeConstraints { make in
+        percentLabel.snp.remakeConstraints { make in
             make.centerX.centerY.equalToSuperview()
         }
-        labelNameStackView.snp.makeConstraints { make in
+        labelNameStackView.snp.remakeConstraints { make in
             make.left.right.equalToSuperview()
             make.top.equalTo(progress.snp.bottom)
             make.height.equalTo(15)
         }
-        labelNumberStackView.snp.makeConstraints { make in
+        labelNumberStackView.snp.remakeConstraints { make in
             make.left.right.equalToSuperview()
             make.top.equalTo(labelNameStackView.snp.bottom).offset(10)
             make.height.equalTo(20)
         }
-        chart.snp.makeConstraints { make in
+        chartLayout()
+    }
+}
+
+extension StatisticView {
+    private func chartLayout() {
+        chart.snp.remakeConstraints { make in
             make.left.equalToSuperview()
             make.right.equalToSuperview()
             make.top.equalTo(transparentView.snp.bottom).offset(10)
             make.bottom.equalToSuperview()
         }
     }
-}
-
-extension StatisticView {
     private func dayButtonLayout() {
-        dayButton.snp.makeConstraints { make in
+        dayButton.snp.remakeConstraints { make in
             make.left.equalTo(titleLabel.snp.left)
             make.top.equalTo(titleLabel.snp.bottom)
             make.height.equalTo(40)
         }
-        dayButton.imageView?.snp.makeConstraints { make in
+        dayButton.imageView?.snp.remakeConstraints { make in
             make.left.equalToSuperview()
         }
-        dayButton.titleLabel?.snp.makeConstraints({ make in
+        dayButton.titleLabel?.snp.remakeConstraints({ make in
             make.left.equalTo(dayButton.imageView!.snp.right)
         })
     }
 }
 
 extension StatisticView {
-    func configView(amountOfWater: Int) {
-        percent = Float(amountOfWater) / 3500
-        amount = amountOfWater
+    func configView(drinksData: [String: Int]) {
+        self.drinksData = drinksData
     }
 }
 
@@ -216,6 +241,129 @@ extension StatisticView {
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         return label
+    }
+    
+    private func getDate(interval: DayInterval) -> String {
+        let today = Calendar.current.startOfDay(for: .now)
+        let dateFormater = DateFormatter()
+        dateFormater.dateFormat = "yyyy:MM:dd"
+        
+        switch interval {
+        case .Today:
+            return dateFormater.string(from: today)
+        case .Yesterday:
+            return dateFormater.string(from: today - (60*60*24))
+        case .Week:
+            return dateFormater.string(from: today - (60*60*24*7))
+        case .Month:
+            return dateFormater.string(from: today - (60*60*24*30))
+        }
+    }
+    
+    private func getChartEntries(interval: DayInterval) -> [ChartDataEntry] {
+        amount = 0
+        switch interval{
+        case .Today:
+            let day = getDate(interval: .Today)
+            var dayData: [String: Int] = [:]
+            drinksData.forEach { key, value in
+                if key.hasPrefix(day) {
+                    dayData[String(key.split(separator: " ")[1])] = value
+                }
+            }
+            currentViewDrinkData = drinksData
+            var result: [ChartDataEntry] = []
+            var i = 0
+            for key in dayData.keys.sorted() {
+                result.append(ChartDataEntry(x: Double(i), y: Double(dayData[key]!)))
+                amount += dayData[key]!
+                i += 1
+            }
+            target = 3500
+            percent = Float(amount) / target
+            if result.count == 1 {
+                result.insert(ChartDataEntry(x: -1, y: 0), at: 0)
+            }
+            return result
+        case .Yesterday:
+            let day = getDate(interval: .Yesterday)
+            var dayData: [String: Int] = [:]
+            drinksData.forEach { key, value in
+                if key.hasPrefix(day) {
+                    dayData[String(key.split(separator: " ")[1])] = value
+                }
+            }
+            currentViewDrinkData = drinksData
+            var result: [ChartDataEntry] = []
+            var i = 0
+            for key in dayData.keys.sorted() {
+                amount += dayData[key]!
+                result.append(ChartDataEntry(x: Double(i), y: Double(dayData[key]!)))
+                i += 1
+            }
+            target = 3500
+            percent = Float(amount) / target
+            if result.count == 1 {
+                result.insert(ChartDataEntry(x: -1, y: 0), at: 0)
+            }
+            return result
+        case .Week:
+            let day = getDate(interval: .Week)
+            var dayData: [String: Int] = [:]
+            drinksData.forEach { key, value in
+                let keyDate = String(key.split(separator: " ")[0])
+                if day < keyDate {
+                    if (dayData[keyDate] != nil) {
+                        dayData[keyDate]! += value
+                    } else {
+                        dayData[keyDate] = value
+                    }
+                }
+            }
+            currentViewDrinkData = dayData
+            
+            var result: [ChartDataEntry] = []
+            var i = 0
+            for key in dayData.keys.sorted() {
+                amount += dayData[key]!
+                result.append(ChartDataEntry(x: Double(i), y: Double(dayData[key]!)))
+                i += 1
+            }
+            target = 3500 * 7
+            percent = Float(amount) / target
+            if result.count == 1 {
+                result.insert(ChartDataEntry(x: -1, y: 0), at: 0)
+            }
+            return result
+            
+        case .Month:
+            let day = getDate(interval: .Month)
+            var dayData: [String: Int] = [:]
+            drinksData.forEach { key, value in
+                let keyDate = String(key.split(separator: " ")[0])
+                if day < keyDate {
+                    if (dayData[keyDate] != nil) {
+                        dayData[keyDate]! += value
+                    } else {
+                        dayData[keyDate] = value
+                    }
+                }
+            }
+            currentViewDrinkData = dayData
+            var result: [ChartDataEntry] = []
+            var i = 0
+            for key in dayData.keys.sorted() {
+                amount += dayData[key]!
+                result.append(ChartDataEntry(x: Double(i), y: Double(dayData[key]!)))
+                i += 1
+            }
+            if result.count == 1 {
+                result.insert(ChartDataEntry(x: -1, y: 0), at: 0)
+            }
+            target = 3500 * 30
+            percent = Float(amount) / target
+            return result
+        }
     }
 }
 

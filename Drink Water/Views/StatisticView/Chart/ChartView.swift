@@ -11,28 +11,31 @@ import Charts
 
 final class ChartView: UIView {
     private let chart = LineChartView()
+    var lineChartEntries: [ChartDataEntry] = []
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        initialize()
+        
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func configureLineChartLize(lineChartEntries: [ChartDataEntry]) {
+        self.lineChartEntries = lineChartEntries
+        initialize()
+    }
+    
     private func initialize() {
-        let lineChartEntries = [
-            ChartDataEntry(x: 1, y: 2),
-            ChartDataEntry(x: 2, y: 4),
-            ChartDataEntry(x: 3, y: 3),
-        ]
         let dataSet = LineChartDataSet(entries: lineChartEntries)
         dataSet.mode = .cubicBezier
         dataSet.drawValuesEnabled = false
         dataSet.drawCirclesEnabled = false
         dataSet.drawFilledEnabled = true
         dataSet.lineWidth = 5
+        dataSet.drawHorizontalHighlightIndicatorEnabled = false
+        dataSet.drawVerticalHighlightIndicatorEnabled = false
         dataSet.setColor(NSUIColor(cgColor: Resources.Color.appGreen.cgColor), alpha: 1)
         let colors = [
             Resources.Color.appGreen.withAlphaComponent(1).cgColor,

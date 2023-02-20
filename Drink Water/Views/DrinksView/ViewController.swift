@@ -12,7 +12,7 @@ enum KeyUserDefaults: String {
     case drinksData
 }
 
-class ViewController: UIViewController {
+class ViewController: UIViewController{
     private var amountOfWater = 0
     private var drinksData: [String: Int] = [:]
     private let defaultUser = UserDefaults.standard
@@ -146,6 +146,7 @@ class ViewController: UIViewController {
         statButton.addTarget(self, action: #selector(presentStatView), for: .touchUpInside)
         view.addSubview(notificationButton)
         view.addSubview(addButton)
+        addButton.addTarget(self, action: #selector(addAmount), for: .touchUpInside)
         addButton.addSubview(addButtonImageView)
     }
     
@@ -173,33 +174,52 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        amountOfWater += cellsData[indexPath.row].size
         UIView.animate(withDuration: 0.5) {
             self.waterProgress.setProgress(Float(self.amountOfWater) / 3500, animated: true)
         }
+                changeDrinkWaterLabel(amount: cellsData[indexPath.row].size)
+    }
+    
+    private func changeDrinkWaterLabel(amount: Int) {
+        amountOfWater += amount
         drunkWaterLabel.moveInTransition(0.4)
         drunkWaterLabel.text = "\(amountOfWater)"
-        let date = Date()
-        let dateFormater = DateFormatter()
-        
-        dateFormater.dateFormat = "yyyy:MM:dd HH:mm"
-        let currentDate = getCurrunDate(with: "yyyy:MM:dd HH:mm")
+        let currentDate = getCurrunDate(with: "yyyy:MM:dd HH")
         if (drinksData[currentDate] != nil) {
-            drinksData[currentDate]! += cellsData[indexPath.row].size
+            drinksData[currentDate]! += amount
         } else {
-            drinksData[currentDate] = cellsData[indexPath.row].size
+            drinksData[currentDate] = amount
         }
         defaultUser.set(drinksData, forKey: KeyUserDefaults.drinksData.rawValue)
     }
-    
 }
+
+
 
 @objc extension ViewController {
     private func presentStatView() {
         let statVC = StatisticView()
         statVC.modalPresentationStyle = .fullScreen
-        statVC.configView(amountOfWater: amountOfWater)
+        statVC.configView(drinksData: drinksData)
         present(statVC, animated: true)
+    }
+    
+    private func addAmount() {
+        let alert = UIAlertController(title: "Add amount", message: nil, preferredStyle: .alert)
+        alert.addTextField { textField in
+            textField.placeholder = "Enter the amount of water"
+            textField.keyboardType = .numberPad
+            textField.delegate = self
+        }
+        let actionAdd = UIAlertAction(title: "Add", style: .default) {_ in
+            let amount = Int(String(alert.textFields![0].text!))!
+            self.changeDrinkWaterLabel(amount: amount)
+            
+        }
+        let actionCancel = UIAlertAction(title: "Cancel", style: .cancel)
+        alert.addAction(actionAdd)
+        alert.addAction(actionCancel)
+        present(alert, animated: true)
     }
 }
 
@@ -277,3 +297,14 @@ extension ViewController {
         }
     }
 }
+
+extension ViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if textField.text?.count == 0 && string == "0" {
+            return false
+        }
+        return true
+    }
+}
+
+
